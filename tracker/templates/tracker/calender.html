@@ -1,0 +1,271 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="{%static 'tracker/style.css' %}">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <title>Hello, world!</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/tracker">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/tracker/input">Input <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/tracker/calender">Calender <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/tracker/stats">Stats <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Dropdown
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+          </div>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="calendar">
+      <div class="month">
+        <i class="fas fa-angle-left prev"></i>
+        <div class="date">
+          <h1></h1>
+          <p></p>
+        </div>
+        <i class="fas fa-angle-right next"></i>
+      </div>
+      <div class="weekdays">
+        <div>Sun</div>
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div>Sat</div>
+      </div>
+      <div class="days"></div>
+    </div>
+  </div>
+
+  <div id='add'>
+    <h1>select a date from the calender</h1>
+    <br>
+  </div>
+
+  <script src="{%static 'tracker/script.js' %}"></script>
+  <script>
+    function clicked_date(i) {
+      i = parseInt(i)
+      let x = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        i
+      ).getDay();
+      let montharr=['01','02','03','04','05','06','07','08','09','10','11','12',]
+      let mydate=date.getFullYear()+'-'+montharr[date.getMonth()]+'-'+i;
+      weekdays = [
+        'sunday',
+        'monday',
+        'tuesday',
+        'wednesday',
+        'thursday',
+        'friday',
+        'saturday']
+
+      console.log(weekdays[x]);
+      let c=0
+
+      //////////////sunday 
+
+      if (weekdays[x] == 'sunday') {
+        
+        var htmltoadd= `<form action="store_attendance/" method="post">{% csrf_token %}
+          Number of subjects:<input type="number" name='no_of_sub' value="{{sunlen}}">
+          Date:<input type="text" name="date" value=`+mydate+`>`
+      {% for i in sun %}
+      {
+          htmltoadd += `
+            name of subject:<input type="text" name="subject`+c+`" value="{{i.sub_name}}">
+            <input type="radio" name="attend`+c+`" value=True>
+          <br>`
+          c+=1
+    }
+    {% endfor %}
+
+    htmltoadd += `<input type="submit" value="submit now">
+        </form>`
+        document.getElementById('add').innerHTML=htmltoadd
+      }
+
+      //////////////////monday
+
+      if (weekdays[x] == 'monday') {
+      document.getElementById('add').innerHTML = `<form action="store_attendance/" method="post">{% csrf_token %}
+          Number of subjects:<input type="number" name='no_of_sub' value="{{monlen}}">
+          Date:<input type="text" name="date" value=`+mydate+`>`
+      {% for i in mon %}
+      {
+        document.getElementById('add').innerHTML += `
+            name of subject:<input type="text" name="subject`+c+`" value="{{i.sub_name}}">
+            <input type="radio" name="attend`+c+`" value=True>
+          <br>`
+          c+=1
+    }
+    {% endfor %}
+
+    document.getElementById('add').innerHTML += `<input type="submit" value="submit now">
+        </form>`
+      }
+
+      ///////////////////tuesday
+
+      if (weekdays[x] == 'tueday') {
+      document.getElementById('add').innerHTML = `<form action="store_attendance/" method="post">{% csrf_token %}
+          Number of subjects:<input type="number" name='no_of_sub' value="{{tuelen}}">
+          Date:<input type="text" name="date" value=`+mydate+`>`
+      {% for i in tue %}
+      {
+        document.getElementById('add').innerHTML += `
+            name of subject:<input type="text" name="subject`+c+`" value="{{i.sub_name}}">
+            <input type="radio" name="attend`+c+`" value=True>
+          <br>`
+          c+=1
+    }
+    {% endfor %}
+
+    document.getElementById('add').innerHTML += `<input type="submit" value="submit now">
+        </form>`
+      }
+
+      //////////////wednesday
+
+      if (weekdays[x] == 'wednesday') {
+      document.getElementById('add').innerHTML = `<form action="store_attendance/" method="post">{% csrf_token %}
+          Number of subjects:<input type="number" name='no_of_sub' value="{{wedlen}}">
+          Date:<input type="text" name="date" value=`+mydate+`>`
+      {% for i in wed %}
+      {
+        document.getElementById('add').innerHTML += `
+            name of subject:<input type="text" name="subject`+c+`" value="{{i.sub_name}}">
+            <input type="radio" name="attend`+c+`" value=True>
+          <br>`
+          c+=1
+    }
+    {% endfor %}
+
+    document.getElementById('add').innerHTML += `<input type="submit" value="submit now">
+        </form>`
+      }
+
+      //////////thursday
+
+      if (weekdays[x] == 'thursday') {
+      document.getElementById('add').innerHTML = `<form action="store_attendance/" method="post">{% csrf_token %}
+          Number of subjects:<input type="number" name='no_of_sub' value="{{thulen}}">
+          Date:<input type="text" name="date" value=`+mydate+`>`
+      {% for i in thu %}
+      {
+        document.getElementById('add').innerHTML += `
+            name of subject:<input type="text" name="subject`+c+`" value="{{i.sub_name}}">
+            <input type="radio" name="attend`+c+`" value=True>
+          <br>`
+          c+=1
+    }
+    {% endfor %}
+
+    document.getElementById('add').innerHTML += `<input type="submit" value="submit now">
+        </form>`
+      }
+
+      //////////////////friday
+
+      if (weekdays[x] == 'friday') {
+      document.getElementById('add').innerHTML = `<form action="store_attendance/" method="post">{% csrf_token %}
+          Number of subjects:<input type="number" name='no_of_sub' value="{{frilen}}">
+          Date:<input type="text" name="date" value=`+mydate+`>`
+      {% for i in fri %}
+      {
+        document.getElementById('add').innerHTML += `
+            name of subject:<input type="text" name="subject`+c+`" value="{{i.sub_name}}">
+            <input type="radio" name="attend`+c+`" value=True>
+          <br>`
+          c+=1
+    }
+    {% endfor %}
+
+    document.getElementById('add').innerHTML += `<input type="submit" value="submit now">
+        </form>`
+      }
+
+      /////////////saturday
+
+      if (weekdays[x] == 'saturday') {
+      document.getElementById('add').innerHTML = `<form action="store_attendance/" method="post">{% csrf_token %}
+          Number of subjects:<input type="number" name='no_of_sub' value="{{satlen}}">
+          Date:<input type="text" name="date" value=`+mydate+`>`
+      {% for i in sat %}
+      {
+        document.getElementById('add').innerHTML += `
+            name of subject:<input type="text" name="subject`+c+`" value="{{i.sub_name}}">
+            <input type="radio" name="attend`+c+`" value=True>
+          <br>`
+          c+=1
+    }
+    {% endfor %}
+
+    document.getElementById('add').innerHTML += `<input type="submit" value="submit now">
+        </form>`
+      }
+      
+    }
+  </script>
+  <!-- Optional JavaScript; choose one of the two! -->
+
+  <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+    crossorigin="anonymous"></script>
+
+  <!-- Option 2: jQuery, Popper.js, and Bootstrap JS
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+    -->
+</body>
+
+</html>
