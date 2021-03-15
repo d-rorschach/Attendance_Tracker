@@ -17,7 +17,7 @@ class subject(models.Model):
     total_class=models.IntegerField(default=0)
     present=models.IntegerField(default=0)
     #user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     def __str__(self):
         return self.sub_name
 
@@ -25,7 +25,7 @@ class subject(models.Model):
 class attend(models.Model):
     date=models.CharField(max_length=50)
     listed_subjects= models.ManyToManyField(subject)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     def __str__(self):
         return str(self.date)
 

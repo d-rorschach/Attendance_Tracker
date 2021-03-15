@@ -8,7 +8,7 @@ def register(rq):
         if form.is_valid():
             form.save()
         
-        return redirect('/tracker/')
+        return redirect('/login/')
     else:
         form = registerform()
     return render(rq, "register/register.html",{"form":form})
